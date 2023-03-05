@@ -80,7 +80,7 @@ inline const double *matrix_cget(const matrix *m, size_t i, size_t j) {
 }
 
 void *matrix_sset(matrix *m, size_t i, size_t j, double value) {
-    if (matrix_get_rows(m) > i || matrix_get_cols(m) > j) {
+    if (matrix_get_rows(m) <= i || matrix_get_cols(m) <= j) {
         return NULL;
     }
     *(m->data + i * m->rows + j) = value;
