@@ -23,8 +23,8 @@ matrix *matrix_alloc(size_t h, size_t w) {
         return NULL;
     }
 
-    mat->cols = h;
-    mat->rows = w;
+    mat->rows = h;
+    mat->cols = w;
     mat->data = m;
 
     return mat;
@@ -61,29 +61,30 @@ matrix *matrix_clone(const matrix *m) {
 }
 
 matrix *matrix_resize(matrix *m, size_t h, size_t w) {
-    matrix *new = matrix_alloc(h, w);
-    if (new == NULL) {
+    m->data = realloc(m->data, h * w * sizeof(double));
+    if (m == NULL) {
         return NULL;
     }
     else {
-        matrix_free(m);
-        return new;
+        m->rows = h;
+        m->cols = w;
+        return m;
     }
 }
 
 inline double *matrix_get(matrix *m, size_t i, size_t j) {
-    return m->data + i * m->rows + j;
+    return m->data + i * m->cols + j;
 }
 
 inline const double *matrix_cget(const matrix *m, size_t i, size_t j) {
-    return m->data + i * m->rows + j;
+    return m->data + i * m->cols + j;
 }
 
 void *matrix_sset(matrix *m, size_t i, size_t j, double value) {
     if (matrix_get_rows(m) <= i || matrix_get_cols(m) <= j) {
         return NULL;
     }
-    *(m->data + i * m->rows + j) = value;
+    *(m->data + i * m->cols + j) = value;
 }
 
 matrix *matrix_set_zero(matrix *m) {
@@ -131,10 +132,22 @@ matrix *matrix_assign(matrix *m1, const matrix *m2) {
     if (matrix_get_rows(m1) != matrix_cget_rows(m2) || matrix_get_cols(m1) != matrix_cget_cols(m2)) {
         return NULL;
     }
-    for (int i = 0; i < matrix_cget_rows(m2); ++i) {
-        for (int j = 0; j < matrix_cget_cols(m2); ++j) {
+    for (int i = 0; i < matrix_cget_rows(m1); ++i) {
+        for (int j = 0; j < matrix_cget_cols(m1); ++j) {
             matrix_sset(m1, i, j, *matrix_cget(m2, i, j));
         }
     }
     return m1;
+}
+
+void matrix_print(const matrix *m) {
+    for (int i = 0; i < matrix_cget_rows(m); ++i) {
+        for (int j = 0; j < matrix_cget_cols(m); ++j) {
+            printf("%lf ", *matrix_cget(m, i, j));
+        }
+        printf("\n");
+    }
+}
+
+
 }

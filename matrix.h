@@ -145,4 +145,12 @@ matrix *matrix_alloc_sqr_one(size_t h);
  */
 matrix *matrix_assign(matrix *m1, const matrix *m2);
 
+/**
+ * @brief prints the matrix by rows
+ * @param m - matrix to print
+ */
+void matrix_print(const matrix *m);
+
+
+
 #endif //INC_23_MATRIX_H
